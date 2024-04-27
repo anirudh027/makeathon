@@ -1,6 +1,5 @@
 import sqlite3
 
-
 def init_db():
     conn = sqlite3.connect('users.db')
     c = conn.cursor()
@@ -19,13 +18,18 @@ def init_db():
     conn.close()
 
 def add_user(email_id, password):
-    conn = sqlite3.connect('users.db')
-    c = conn.cursor()
-    c.execute('''
-        INSERT INTO profiles (email_id, password) VALUES (?, ?)
-    ''', (email_id, password))
-    conn.commit()
-    conn.close()
+    try:
+        conn = sqlite3.connect('users.db')
+        c = conn.cursor()
+        c.execute('''
+            INSERT INTO profiles (email_id, password) VALUES (?, ?)
+        ''', (email_id, password))
+        conn.commit()
+        conn.close()
+    except:
+        print("User already exists")
+        conn.commit()
+        conn.close()
 
 def load_profile(email_id):
     conn = sqlite3.connect('users.db')
@@ -78,7 +82,27 @@ def delete_user(email_id):
     conn.commit()
     conn.close()
 
-def profile_to_text(email, file_name):
+def get_all_emails(exclude):
+    conn = sqlite3.connect('users.db')
+    c = conn.cursor()
+    c.execute('''
+        SELECT email_id FROM profiles WHERE email_id != ?
+    ''', (exclude,))
+    emails = c.fetchall()
+    conn.close()
+    return emails
+
+def does_email_exist(email):
+    conn = sqlite3.connect('users.db')
+    c = conn.cursor()
+    c.execute('''
+        SELECT email_id FROM profiles WHERE email_id = ?
+    ''', (email,))
+    rows = c.fetchall()
+    conn.close()
+    return len(rows) > 0
+
+def persona_to_text(email, file_name):
     '''
     Save the profile to a well structured text file .txt
     '''
@@ -94,3 +118,17 @@ def profile_to_text(email, file_name):
     with open(f"{file_name}.txt", "w") as f:
         f.write(text)
 
+def history_to_text(emails, file_name):
+    '''
+    Save the history of all emails to a text file
+    '''
+    text = ""
+    for email in emails:
+        profile = load_profile(email[0])
+        text += f"Email: {email[0]}\n"
+        text += f"History: {profile[4]}\n"
+        text += "\n"
+
+    ## Write to a text file
+    with open(f"{file_name}.txt", "w") as f:
+        f.write(text)
