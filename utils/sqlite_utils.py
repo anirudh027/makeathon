@@ -1,6 +1,6 @@
 import sqlite3
 
-db_path = 'C:/Users/vishw/OneDrive/Desktop/Projects/makeathon/users.db'
+db_path = 'C:/VS code projects/Makeathon/makeathon/users.db'
 
 def init_db():
     conn = sqlite3.connect(db_path)
@@ -58,7 +58,7 @@ def append_to_profile_column(email_id, column_name, data):
     if current_value is None:
         new_value = data
     else:
-        new_value = current_value + "/n" + data
+        new_value = data
     c.execute('''
         UPDATE profiles SET {} = ? WHERE email_id = ?
     '''.format(column_name), (new_value, email_id))
