@@ -88,10 +88,10 @@ def refresh_user_data(USER_ID):
     similar_history_rag = create_retriever_tool(
         similar_history_retriever,
         "similar_history",
-        "Similar user history",
+        "History of users with similar preferences",
     )
 
-    TOOLS = [DuckDuckGoSearchRun(), static_rag, persona_rag, update_persona]
+    TOOLS = [DuckDuckGoSearchRun(), static_rag, persona_rag, similar_history_rag, update_persona, summarize_chat]
 
 class Persona(BaseModel):
     Demographics: str = Field(default=None, description="This encompasses various personal attributes and characteristics that describe an individual or group. It includes information about their gender, age or age group, marital status, and details about their children, such as the number and their ages. It also takes into account their profession, current economic standing, and potential for career growth. The location is also a key factor, covering the type of region they reside in, whether rural or urban, as well as the country they live in. Additionally, it examines their vehicle ownership history, indicating the number and types of vehicles, with a focus on whether they prefer luxury modern executive, compact SUVs or mid-range cars or used cars. It should also include what price of car they prefer. Finally, this description includes the percentage of the overall customer base that this group represents.")
@@ -121,6 +121,21 @@ def update_persona(Demographics: str  = None, Customer_Experience: str = None, P
 
     print("Tools updated")
 
+class SummarizeChat(BaseModel):
+    chat_highlights: str = Field(description="This will describe the different cars and prices suggested to the customer by the bot and whether they reacted positively or negatively towards that particluar suggestion. It will record each of the suggestionas and the corresponding reactions in bullet form. Just record the answers like positive or negative beside the suggestion provided and also the reason behind why they liked or disliked a particulr model. It can be something like,  EQB SUV suggested: Disliked because the customer did not like the charging. The next suggestion and the corresponding reaction can be in the next line in another bullet point.")
+
+@tool("summarize_chat", args_schema=SummarizeChat, return_direct=False)
+def summarize_chat(chat_highlights: str) -> None:
+    """
+    Summarizes the entire conversation that the customer had with the bot.
+    """
+    append_to_profile_column(USER_ID, 'history', chat_highlights)
+
+    ## update the user persona
+    refresh_user_data(USER_ID)
+
+    print("Tools updated")
+
 
 
 ### DEFINING GLOBAL VARIABLES ###
@@ -135,9 +150,9 @@ static_rag = create_retriever_tool(
 )
 persona_rag= None
 similar_history_rag = None
-TOOLS = [DuckDuckGoSearchRun(), static_rag, persona_rag, similar_history_rag, update_persona]
-MESSAGES = [SystemMessage(content="This will assist customers to buy an electric car that will recommend only Mercedes cars. Your focus is giving concise answers and making a sale. You need to use the file 'user_persona' to identify their needs. These needs need to be updated frequently.\
-                          The 'update_persona' function will be called whenever it gets information that needs to be added to any one of the four categories namely, Demographics, Customer Experience, Psychology and Marketing Implications. Anytime a personal information or preference comes, check if it needs to be updated. Then look up the answer in the user_persona document.\
+TOOLS = [DuckDuckGoSearchRun(), static_rag, persona_rag, similar_history_rag, update_persona, summarize_chat]
+MESSAGES = [SystemMessage(content="This will assist customers to buy an electric car that will recommend only Mercedes cars. Your focus is giving concise answers and making a sale. You need to use the file 'user_persona' to identify their needs. These needs need to be updated frequently with the 'update_persona' tool.\
+                          The 'update_persona' function will be called whenever you get any new updates. Anytime a personal information or preference comes, check if it needs to be updated. Then look up the answer in the 'mercedes_e_cars_specs' document. For better recommendations, you should refer 'similar_history' file to see what similar people prefer.\
                           The 'summarize_chat' function will be called at the end of the chat to summarize all the information regarding the entire conversation. There will be the suggestions provided by the bot and corresponding to each of them there has to be a reaction recorded as in whether the customer had a positive or negative reaction. Give negative responses to the cars that the customer does not talk about when suggested. Each of the suggestions and the reactions should be in separate lines, preferably in bullet points.\
                           Do not ask many questions. Do not tell the user that the function has been called. Do not mention the source pdf from where it is getting the information.")]
 
@@ -152,6 +167,8 @@ def update_user_id(email):
 def chat(msg):
 
     global MESSAGES, TOOLS
+
+    print(TOOLS)
 
     llm = ChatOpenAI(
         model="gpt-4",
