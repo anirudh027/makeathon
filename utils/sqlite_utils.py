@@ -1,7 +1,9 @@
 import sqlite3
 
+db_path = 'C:/Users/vishw/OneDrive/Desktop/Projects/makeathon/users.db'
+
 def init_db():
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(db_path)
     c = conn.cursor()
     c.execute('''
         CREATE TABLE IF NOT EXISTS profiles (
@@ -19,7 +21,7 @@ def init_db():
 
 def add_user(email_id, password):
     try:
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(db_path)
         c = conn.cursor()
         c.execute('''
             INSERT INTO profiles (email_id, password) VALUES (?, ?)
@@ -32,7 +34,7 @@ def add_user(email_id, password):
         conn.close()
 
 def load_profile(email_id):
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(db_path)
     c = conn.cursor()
     c.execute('''
         SELECT demographics, psychology, experience, marketing, history FROM profiles WHERE email_id = ?
@@ -45,13 +47,13 @@ def append_to_profile_column(email_id, column_name, data):
     '''
     Appends new information to one of emographics, psychology, experience, marketing columns
     '''
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(db_path)
     c = conn.cursor()
     ## Get the current value in the column
     c.execute('''
         SELECT {} FROM profiles WHERE email_id = ?
     '''.format(column_name), (email_id,))
-
+    
     current_value = c.fetchone()[0]
     if current_value is None:
         new_value = data
@@ -64,7 +66,7 @@ def append_to_profile_column(email_id, column_name, data):
     conn.close()
 
 def display_profile_table():
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(db_path)
     c = conn.cursor()
     c.execute('''
         SELECT * FROM profiles
@@ -74,7 +76,7 @@ def display_profile_table():
     return rows
 
 def delete_user(email_id):
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(db_path)
     c = conn.cursor()
     c.execute('''
         DELETE FROM profiles WHERE email_id = ?
@@ -83,7 +85,7 @@ def delete_user(email_id):
     conn.close()
 
 def get_all_emails(exclude):
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(db_path)
     c = conn.cursor()
     c.execute('''
         SELECT email_id FROM profiles WHERE email_id != ?
@@ -93,7 +95,7 @@ def get_all_emails(exclude):
     return emails
 
 def does_email_exist(email):
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(db_path)
     c = conn.cursor()
     c.execute('''
         SELECT email_id FROM profiles WHERE email_id = ?
@@ -108,11 +110,11 @@ def persona_to_text(email, file_name):
     '''
     profile = load_profile(email)
     text = f"Email: {email}\n"
-    text += f"Demographics: {profile[0]}\n"
-    text += f"Psychology: {profile[1]}\n"
-    text += f"Experience: {profile[2]}\n"
-    text += f"Marketing: {profile[3]}\n"
-    text += f"History: {profile[4]}\n"
+    text += f"Demographics: {profile[0]}\n\n"
+    text += f"Psychology: {profile[1]}\n\n"
+    text += f"Experience: {profile[2]}\n\n"
+    text += f"Marketing: {profile[3]}\n\n"
+    text += f"History: {profile[4]}\n\n"
 
     ## Write to a text file
     with open(f"{file_name}.txt", "w") as f:
@@ -124,8 +126,8 @@ def history_to_text(emails, file_name):
     '''
     text = ""
     for email in emails:
-        profile = load_profile(email[0])
-        text += f"Email: {email[0]}\n"
+        profile = load_profile(email)
+        text += f"Email: {email}\n"
         text += f"History: {profile[4]}\n"
         text += "\n"
 
