@@ -1,21 +1,24 @@
 import time
 import gradio as gr
 from openai import OpenAI
+import sys
 
+sys.path.append("../")
+from utils.gpt_tools import chat
 client = OpenAI(api_key="")
 
-# response function
-def chat(msg,persona):
-    msg= str(msg)
-    completion = client.chat.completions.create(
-        model="gpt-3.5-turbo",
-        messages=[
-        {"role": "system", "content": "You are an assistant to help the user"},
-        {"role": "user", "content": msg}
-        ]
-    )
-    response = completion.choices[0].message.content
-    return response
+# # response function
+# def chat(msg,persona):
+#     msg= str(msg)
+#     completion = client.chat.completions.create(
+#         model="gpt-3.5-turbo",
+#         messages=[
+#         {"role": "system", "content": "You are an assistant to help the user"},
+#         {"role": "user", "content": msg}
+#         ]
+#     )
+#     response = completion.choices[0].message.content
+#     return response
 
 with gr.Blocks(
     title='test',
