@@ -18,13 +18,12 @@ from langchain_core.pydantic_v1 import BaseModel, Field
 from langchain_openai import OpenAIEmbeddings
 from langchain.evaluation import load_evaluator
 import sys
-from gpt_tools import *
-from sqlite_utils import *
+from utils.sqlite_utils import *
 
 import numpy as np
 import os
 
-
+os.environ["OPENAI_API_KEY"] = ""
 
 ## SIMILARITY MATCHING ##
 embeddings_model = OpenAIEmbeddings(model="text-embedding-ada-002")
@@ -141,7 +140,7 @@ def summarize_chat(chat_highlights: str) -> None:
 ### DEFINING GLOBAL VARIABLES ###
 USER_ID = None
 embeddings = OpenAIEmbeddings()
-db = FAISS.load_local("mercedes_db/", embeddings, allow_dangerous_deserialization=True)
+db = FAISS.load_local("C:\VS code projects\Makeathon\makeathon\mercedes_db/", embeddings, allow_dangerous_deserialization=True)
 retriever = db.as_retriever()
 static_rag = create_retriever_tool(
     retriever,
@@ -164,7 +163,7 @@ def update_user_id(email):
     global USER_ID
     USER_ID = email
 
-def chat(msg):
+def chat(msg,persona):
 
     global MESSAGES, TOOLS
 
