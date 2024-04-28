@@ -6,7 +6,7 @@ Certainly! Here's a template for the README file:
 
 ## Overview
 
-"xx" is an advanced self-learning bot designed to offer personalized recommendations for Mercedes electric cars based on users' unique personas and preferences. Leveraging state-of-the-art technologies, including RAG (Retrieval-Augmented Generation) and LangChain, "xx" delivers tailored suggestions while also providing extensive web search capabilities for answering a wide range of user queries.
+tAIlored torque is an advanced self-learning bot designed to offer personalized recommendations for Mercedes electric cars based on users' unique personas and preferences. Leveraging state-of-the-art technologies, including RAG (Retrieval-Augmented Generation) and LangChain, tAIlored torque delivers tailored suggestions while also providing extensive web search capabilities for answering a wide range of user queries.
 
 ## Features
 
@@ -17,5 +17,5 @@ Certainly! Here's a template for the README file:
 
 ## How it Works
 
-"xx" employs a combination of RAG for advanced natural language processing, LangChain for learning and adaptation, and a sleek user interface for seamless interaction. By analyzing user inputs, "xx" identifies relevant factors such as lifestyle, preferences, and budget to generate personalized recommendations. Furthermore, its integration with web search engines enables it to provide comprehensive answers to a wide array of user queries beyond its primary function.
+tAIlored torque employs a combination of RAG for advanced natural language processing, LangChain for learning and adaptation, and a sleek user interface for seamless interaction. By analyzing user inputs, tAIlored torque identifies relevant factors such as lifestyle, preferences, and budget to generate personalized recommendations. Furthermore, its integration with web search engines enables it to provide comprehensive answers to a wide array of user queries beyond its primary function.
 
