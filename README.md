@@ -4,7 +4,7 @@ Certainly! Here's a template for the README file:
 
 # Tailored.Torque Personalized Mercedes Electric Car Recommendations Bot
 
-<a href="images/logo.png">
+<a href="images/logo.png"></a>
 ## Overview
 
 Tailored.Torque is an advanced self-learning bot designed to offer personalized recommendations for Mercedes electric cars based on users' unique personas and preferences. Leveraging state-of-the-art technologies, including RAG (Retrieval-Augmented Generation) and LangChain, Tailored.Torque delivers tailored suggestions while also providing extensive web search capabilities for answering a wide range of user queries.
