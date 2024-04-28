@@ -4,7 +4,7 @@ Certainly! Here's a template for the README file:
 
 # Tailored.Torque Personalized Mercedes Electric Car Recommendations Bot
 
-![Image Description]("images/logo.png")
+![Image Description](images/logo.png)
 
 ## Overview
 
